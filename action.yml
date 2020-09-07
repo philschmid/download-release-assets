@@ -1,0 +1,34 @@
+name: Download Release Assets
+description: Download Assets from a Github release
+inputs:
+  repository:
+    description: owner/repository
+    required: false
+    default: ""
+  release:
+    description: version of the release
+    required: false
+    default: "latest"
+  asset_name:
+    description: name of the file in the release to download
+    required: true
+  github_token:
+    description: Github access token to the repository
+    required: true
+    default: ""
+
+outputs:
+  result:
+    description: The state of the action, if the file could be downloaded successfully
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{ inputs.repository }}
+    - ${{ inputs.release }}
+    - ${{ inputs.asset_name }}
+    - ${{ inputs.github_token }}
+branding:
+  icon: "download-cloud"
+  color: "blue"
