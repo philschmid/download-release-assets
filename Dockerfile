@@ -8,5 +8,7 @@ RUN	apk add --no-cache \
   jq
 
 COPY download_release_assets.sh /download_release_assets.sh
+RUN chmod +x /download_release_assets.sh
 
-ENTRYPOINT ["./download_release_assets.sh"]
+
+ENTRYPOINT ["/download_release_assets.sh"]

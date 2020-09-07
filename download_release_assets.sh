@@ -1,42 +1,36 @@
 #!/bin/bash
-sh -c "echo $*"
+set -e
 
-# if [[ -z "$INPUT_FILE" ]]; then
-#   echo "Missing file input in the action"
-#   exit 1
-# fi
+if [[ -z "$INPUT_ASSET_NAME" ]]; then
+  echo "Missing file input in the action"
+  exit 1
+fi
 
-# if [[ -z "$GITHUB_REPOSITORY" ]]; then
-#   echo "Missing GITHUB_REPOSITORY env variable"
-#   exit 1
-# fi
+if [[ -z "$INPUT_GITHUB_TOKEN" ]]; then
+  echo "Missing GITHUB TOKEN in the action"
+  exit 1
+fi
 
-# REPO=$GITHUB_REPOSITORY
-# if ! [[ -z ${INPUT_REPO} ]]; then
-#   REPO=$INPUT_REPO ;
-# fi
 
-# # Optional personal access token for external repository
-# TOKEN=$GITHUB_TOKEN
-# if ! [[ -z ${INPUT_TOKEN} ]]; then
-#   TOKEN=$INPUT_TOKEN
-# fi
+if [[ -z "$GITHUB_REPOSITORY" ]]; then
+  echo "Missing GITHUB_REPOSITORY env variable"
+  exit 1
+fi
 
-# API_URL="https://$TOKEN:@api.github.com/repos/$REPO"
-# RELEASE_DATA=$(curl $API_URL/releases/${INPUT_VERSION})
-# ASSET_ID=$(echo $RELEASE_DATA | jq -r ".assets | map(select(.name == \"${INPUT_FILE}\"))[0].id")
-# TAG_VERSION=$(echo $RELEASE_DATA | jq -r ".tag_name" | sed -e "s/^v//" | sed -e "s/^v.//")
+OWNER_REPOSITORY=$GITHUB_REPOSITORY
+if ! [[ -z ${INPUT_REPOSITORY} ]]; then
+  OWNER_REPOSITORY=$INPUT_REPOSITORY;
+fi
 
-# if [[ -z "$ASSET_ID" ]]; then
-#   echo "Could not find asset id"
-#   exit 1
-# fi
+list_asset_url="https://api.github.com/repos/${OWNER_REPOSITORY}/releases/${INPUT_RELEASE}?access_token=${INPUT_GITHUB_TOKEN}"
+echo "url" +$list_asset_url
 
-# curl \
-#   -J \
-#   -L \
-#   -H "Accept: application/octet-stream" \
-#   "$API_URL/releases/assets/$ASSET_ID" \
-#   -o ${INPUT_FILE}
+# get url for artifact with name==$artifact
+asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${INPUT_ASSET_NAME}\") | .url" | sed 's/\"//g')
+echo "url" + $asset_url
+# download the artifact
+curl -vLJO -H 'Accept: application/octet-stream' \
+    "${asset_url}?access_token=${INPUT_GITHUB_TOKEN}"
 
-# echo "::set-output name=result::success"
+
+echo "::set-output name=result::success"
