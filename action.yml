@@ -1,4 +1,4 @@
-name: Download Release Asset
+name: Download custom Release Asset
 description: Download Asset from a Github release
 inputs:
   repository:
