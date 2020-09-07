@@ -22,14 +22,15 @@ if ! [[ -z ${INPUT_REPOSITORY} ]]; then
   OWNER_REPOSITORY=$INPUT_REPOSITORY;
 fi
 
-list_asset_url="https://api.github.com/repos/${OWNER_REPOSITORY}/releases/${INPUT_RELEASE}?access_token=${INPUT_GITHUB_TOKEN}"
+list_asset_url="https://api.github.com/repos/${OWNER_REPOSITORY}/releases/${INPUT_RELEASE}"
 echo "url" +$list_asset_url
 
 # get url for artifact with name==$artifact
-asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${INPUT_ASSET_NAME}\") | .url" | sed 's/\"//g')
+asset_url=$(curl -H "Authorization: token ${INPUT_GITHUB_TOKEN}" "${list_asset_url}" | jq ".assets[] | select(.name==\"${INPUT_ASSET_NAME}\") | .url" | sed 's/\"//g')
 echo "url" + $asset_url
 # download the artifact
 curl -vLJO -H 'Accept: application/octet-stream' \
+    -H "Authorization: token ${INPUT_GITHUB_TOKEN}" \
     "${asset_url}?access_token=${INPUT_GITHUB_TOKEN}"
 
 
