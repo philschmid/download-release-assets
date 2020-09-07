@@ -1,5 +1,5 @@
-name: Download Release Assets
-description: Download Assets from a Github release
+name: Download Release Asset
+description: Download Asset from a Github release
 inputs:
   repository:
     description: owner/repository
