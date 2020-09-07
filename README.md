@@ -33,8 +33,8 @@ The state of the action, if the file could be downloaded successfully
 ```yaml
 uses: philschmid/download-release-assets@master
 with:
-  file: packages.zip
-  token: ${{ secrets.GITHUB_TOKEN }}
+  asset_name: packages.zip
+  github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 # Custom Repository Configuration
@@ -43,27 +43,27 @@ with:
 uses: philschmid/download-release-assets@master
 with:
   repository: philschmid/frontend-applikation
-  file: packages.zip
-  token: ${{ secrets.GITHUB_TOKEN }}
+  asset_name: packages.zip
+  github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-# Custom Version Configuration
+# Custom Release Configuration
 
 ```yaml
 uses: philschmid/download-release-assets@master
 with:
-  version: latest
+  release: latest
   file: packages.zip
-  token: ${{ secrets.GITHUB_TOKEN }}
+  github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-# Custom Version and Repository Configuration
+# Custom Release and Repository Configuration
 
 ```yaml
 uses: philschmid/download-release-assets@master
 with:
   repository: philschmid/frontend-applikation
-  version: latest
-  file: packages.zip
-  token: ${{ secrets.GITHUB_TOKEN }}
+  release: latest
+  asset_name: packages.zip
+  github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
